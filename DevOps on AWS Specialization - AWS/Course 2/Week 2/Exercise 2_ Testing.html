@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!-- saved from url=(0091)https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Exercise 2: Testing</title>
+  <script src="./Exercise 2_ Testing_files/clipboard.min.js"></script>
+  <script src="./Exercise 2_ Testing_files/copybutton.js"></script>
+
+<style>
+    html, body, footer {
+        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        margin: 1em;
+    }
+
+    img:not(.clipboard){
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }
+
+    /* Copy buttons */
+    button.copybtn {
+        webkit-transition: opacity .3s ease-in-out;
+        -o-transition: opacity .3s ease-in-out;
+        transition: opacity .3s ease-in-out;
+        opacity: 0;
+        padding: 2px 6px;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+    }
+    div.sourceCode:hover .copybtn, div.sourceCode .copybtn:focus {
+        opacity: .3;
+    }
+    div.sourceCode .copybtn:hover {
+        opacity: 1;
+    }
+    div.sourceCode {
+        position: relative;
+    }
+    .xmodule_display.xmodule_HtmlBlock ol {
+        padding: 0 0 0 2em !important;
+    }
+    .xmodule_display.xmodule_HtmlBlock ul {
+        padding: 0 0 0 2em !important;
+    }
+
+    code {
+        padding: 2px 4px !important;
+        background-color: #eee !important;
+        border-radius: 4px;
+    }
+    pre code {
+        padding: 9.5px !important;
+        background-color: #f5f5f5 !important;
+        display: block;
+        overflow-x: auto;
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        word-break: break-all;
+        word-wrap: break-word;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        white-space: pre;
+    }
+    pre code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    pre code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    pre code span.at { color: #7d9029; } /* Attribute */
+    pre code span.bn { color: #40a070; } /* BaseN */
+    pre code span.bu { color: #06287e; } /* BuiltIn */
+    pre code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    pre code span.ch { color: #4070a0; } /* Char */
+    pre code span.cn { color: #880000; } /* Constant */
+    pre code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    pre code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    pre code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    pre code span.dt { color: #902000; } /* DataType */
+    pre code span.dv { color: #40a070; } /* DecVal */
+    pre code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    pre code span.ex { color: #06287e; } /* Extension */
+    pre code span.fl { color: #40a070; } /* Float */
+    pre code span.fu { color: #06287e; } /* Function */
+    pre code span.im { } /* Import */
+    pre code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    pre code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    pre code span.op { color: #666666; } /* Operator */
+    pre code span.ot { color: #007020; } /* Other */
+    pre code span.pp { color: #bc7a00; } /* Preprocessor */
+    pre code span.sc { color: #4070a0; } /* SpecialChar */
+    pre code span.ss { color: #bb6688; } /* SpecialString */
+    pre code span.st { color: #4070a0; } /* String */
+    pre code span.va { color: #19177c; } /* Variable */
+    pre code span.vs { color: #4070a0; } /* VerbatimString */
+    pre code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+    footer {
+        padding-top: 3em;
+        font-style: italic;
+        font-size: .9em;
+    }
+</style>
+</head><body data-new-gr-c-s-check-loaded="14.1075.0" data-gr-ext-installed="">
+<p><em>[version_1.0]</em></p>
+<h1 id="exercise-testing-the-application">Exercise: Testing the Application</h1>
+<p>In this exercise, you will return to the AWS Cloud9 instance and run the local build for the project. The local build contains linting (or static analysis) of the code and unit tests. Next, you will run an integration test. The integration test finds the API Gateway Websocket endpoint, and it simulates a player completing a game. You will then add a simple feature to the code. Finally, you will fix the unit tests and commit the changes to your repository.</p>
+<h2 id="task-1-running-unit-tests">Task 1: Running unit tests</h2>
+<p>In this task, you run unit tests against the application code. You then view the reports that are outputted from these tests.</p>
+<ol type="1">
+<li><p>In your <strong>AWS Cloud9</strong> terminal, make sure you are still in the <code>trivia-app</code> folder. The prompt should also show the top-level Git branch.</p>
+<pre><code>cd ~/environment/trivia-app</code></pre></li>
+<li><p>Install the backend code requirements and the unit test requirements by using <code>pip3</code> to run the following commands.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash" id="codeblock0"><code class="sourceCode bash"><span id="cb2-1"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-2.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip3</span> install <span class="at">-U</span> <span class="at">-r</span> back-end-python/gameactions/requirements.txt</span>
+<span id="cb2-2"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-2.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip3</span> install <span class="at">-U</span> <span class="at">-r</span> back-end-python/tests/requirements.txt</span>
+<span id="cb2-3"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-2.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./local_build.sh</span></span></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock0"><img class="clipboard" src="./Exercise 2_ Testing_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div>
+<p>You should see the code rating after <code>pylint</code> does its static analysis:</p>
+<pre><code>------------------------------------
+Your code has been rated at 10.00/10</code></pre>
+<p>Then, <code>pytest</code> runs its unit tests, which are shown like the following example:</p>
+<pre><code>back-end-python/tests/unit/test_handler.py .........</code></pre>
+<p>It will also output a coverage report in HTML, which is in <code>/trivia-app/htmlcov</code>.</p></li>
+<li><p>In the <code>htmlcov</code> folder, right-click the <code>index.html</code> file and view the coverage report by choosing <strong>Preview</strong>.</p></li>
+</ol>
+<h2 id="task-2-running-the-integration-test">Task 2: Running the integration test</h2>
+<p>For this task, you run an integration test against the application code.</p>
+<ol type="1">
+<li><p>Start the integration test (which will simulate a game) by running the following command.</p>
+<pre><code>AWS_SAM_STACK_NAME=trivia-app pytest -s back-end-python/tests/integration/test_api_gateway.py</code></pre>
+<p>The integration test uses the AWS SAM stack to find the Websocket endpoint, so the stack is passed in the <code>AWS_SAM_STACK_NAME</code> environment variable.</p>
+<p>At the end of the test, you should see the following message: <strong><em>1 passed</em></strong></p></li>
+</ol>
+<h2 id="task-3-updating-the-code-and-unit-tests">Task 3: Updating the code and unit tests</h2>
+<p>In this task, you update the application code to change the score value from <em>10</em> to <em>20</em>. You also update the unit test code.</p>
+<ol type="1">
+<li><p>Open the <code>trivia-app/back-end-python/gameactions/app.py</code> file.</p></li>
+<li><p>Scroll down to the <code>trivia_calculate_scores</code> function.</p></li>
+<li><p>Update the code so the game increments the score by <code>20</code> instead of by <code>10</code>. Locate <code>score += 10</code> and change it to <code>score += 20</code>. Make sure to save the file.</p>
+<pre><code>score += 20</code></pre></li>
+<li><p>Verify that you left the code in a stable state by running the <code>./local_build.sh</code> command.</p>
+<p>At the top of the failure report, you should see that the <code>test_trivia_calculate_scores_correct</code> test failed:</p>
+<pre><code>=============================================== FAILURES ============================================================================================
+_________________________________ test_trivia_calculate_scores_correct ______________________________________________________________________________</code></pre>
+<p>You also need to update the unit test to match the new score.</p></li>
+<li><p>Open the <code>trivia-app/back-end-python/tests/unit/test_handler.py</code> file.</p></li>
+<li><p>Find the <code>test_trivia_calculate_scores_correct</code> function.</p></li>
+<li><p>In the function’s <code>TABLE.update_item.assert_called_with</code> call, find the <code>AttributeUpdates</code> field and update the <code>Value</code> from <code>10</code> to <code>20</code>.</p>
+<pre><code>AttributeUpdates={'score': {'Value': 20, 'Action': 'PUT'}}</code></pre></li>
+<li><p>You must also update <code>app.MANAGEMENT.post_to_connection.assert_has_calls</code> (which tests API Gateway Websocket calls). Change the value of <code>score</code> from <code>10</code> to <code>20</code>.</p>
+<pre><code>mock.call(Data='{"action": "playerlist", "players": [{"connectionId": "connection-1", "playerName": "AliceBlue", "score": 20, "currentPlayer": true}]}', ConnectionId='connection-1'),</code></pre></li>
+<li><p>Save the file and re-run <code>./local_build.sh</code>. The test summary should again show that everything passed.</p></li>
+</ol>
+<h2 id="task-4-committing-to-source-control-through-the-aws-cloud9-gui-or-the-aws-cli">Task 4: Committing to source control through the AWS Cloud9 GUI or the AWS CLI</h2>
+<p>In this task, you commit the changes from the previous tasks to your code repository. <em>You can commit the code by using either the <strong>AWS Cloud9 GUI</strong>, or AWS CLI commands in the <strong>AWS Cloud9 terminal</strong></em>.</p>
+<ol type="1">
+<li><p>In the menu, at the left of <strong>AWS Cloud9</strong>, choose the source control icon:</p>
+<p><img src="./Exercise 2_ Testing_files/Capture.PNG" alt="source_control">.</p></li>
+<li><p>Under <strong>Changes</strong>, select either the <code>app.py</code> or <code>test_handler.py</code> file to view the diffs between the original files and your changes.</p></li>
+<li><p>Under <strong>Changes</strong>, stage the changes in <code>app.py</code> and <code>test_handler.py</code> for a commit by placing the pointer over the file name and choosing the stage icon (<strong>+</strong>) for the file. The files should now appear under <strong>Staged Changes</strong>.</p></li>
+<li><p>In the <strong>Source Control</strong> pane, at the right side of the <strong>trivia-app</strong> heading, left-click paper scroll icon and choose <strong>Commit</strong>. Choose <strong>Yes</strong>.</p>
+<p><img src="./Exercise 2_ Testing_files/Capture2.PNG" alt="paper_scroll_icon">.</p></li>
+<li><p>Under the <strong>trivia-app</strong> heading, enter the following commit message and press Enter: <code>Scores now increment by 20</code></p>
+<p><img src="./Exercise 2_ Testing_files/Capture3.PNG" alt="commit_message">.</p></li>
+<li><p>In the <strong>trivia-app</strong> heading, left-click the paper scroll icon and choose <strong>Push to…</strong>. When prompted to select a remote, choose the remote named <strong>origin</strong>.</p></li>
+</ol>
+<details>
+<summary>
+Commit changes through the AWS CLI
+</summary>
+<h2 id="task-4-committing-to-source-control-through-the-aws-cli">Task 4: Committing to source control through the AWS CLI</h2>
+<ol type="1">
+<li><p>In <strong>AWS Cloud9</strong>, you can also use the AWS CLI to commit the changes to AWS CodeCommit by running the following command:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash" id="codeblock1"><code class="sourceCode bash"><span id="cb10-1"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-2.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="pp">*</span></span>
+<span id="cb10-2"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-2.html#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Scores now increment by 20"</span></span>
+<span id="cb10-3"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-2.html#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main</span></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock1"><img class="clipboard" src="./Exercise 2_ Testing_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div></li>
+</ol>
+</details>
+<script>
+document.body.innerHTML = document.body.innerHTML.replace(/https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/(.+)/g, function (match, capture) {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = capture;
+  return new URL(tmp.textContent || tmp.innerText || "", document.baseURI).href;
+});
+</script>
+
+<footer>
+    <p>© 2021 Amazon Web Services, Inc. or its affiliates. All rights reserved. This work may not be reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited. Corrections, feedback, or other questions? Contact us at <a href="https://support.aws.amazon.com/#/contacts/aws-training" target="_blank">https://support.aws.amazon.com/#/contacts/aws-training</a>. All trademarks are the property of their owners.</p>
+</footer>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!-- saved from url=(0091)https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C2/exercise-2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Exercise 2: Revisions</title>
+  <script src="./Exercise 2_ Revisions_files/clipboard.min.js"></script>
+  <script src="./Exercise 2_ Revisions_files/copybutton.js"></script>
+
+<style>
+    html, body, footer {
+        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        margin: 1em;
+    }
+
+    img:not(.clipboard){
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }
+
+    /* Copy buttons */
+    button.copybtn {
+        webkit-transition: opacity .3s ease-in-out;
+        -o-transition: opacity .3s ease-in-out;
+        transition: opacity .3s ease-in-out;
+        opacity: 0;
+        padding: 2px 6px;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+    }
+    div.sourceCode:hover .copybtn, div.sourceCode .copybtn:focus {
+        opacity: .3;
+    }
+    div.sourceCode .copybtn:hover {
+        opacity: 1;
+    }
+    div.sourceCode {
+        position: relative;
+    }
+    .xmodule_display.xmodule_HtmlBlock ol {
+        padding: 0 0 0 2em !important;
+    }
+    .xmodule_display.xmodule_HtmlBlock ul {
+        padding: 0 0 0 2em !important;
+    }
+
+    code {
+        padding: 2px 4px !important;
+        background-color: #eee !important;
+        border-radius: 4px;
+    }
+    pre code {
+        padding: 9.5px !important;
+        background-color: #f5f5f5 !important;
+        display: block;
+        overflow-x: auto;
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        word-break: break-all;
+        word-wrap: break-word;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        white-space: pre;
+    }
+    pre code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    pre code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    pre code span.at { color: #7d9029; } /* Attribute */
+    pre code span.bn { color: #40a070; } /* BaseN */
+    pre code span.bu { color: #06287e; } /* BuiltIn */
+    pre code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    pre code span.ch { color: #4070a0; } /* Char */
+    pre code span.cn { color: #880000; } /* Constant */
+    pre code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    pre code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    pre code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    pre code span.dt { color: #902000; } /* DataType */
+    pre code span.dv { color: #40a070; } /* DecVal */
+    pre code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    pre code span.ex { color: #06287e; } /* Extension */
+    pre code span.fl { color: #40a070; } /* Float */
+    pre code span.fu { color: #06287e; } /* Function */
+    pre code span.im { } /* Import */
+    pre code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    pre code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    pre code span.op { color: #666666; } /* Operator */
+    pre code span.ot { color: #007020; } /* Other */
+    pre code span.pp { color: #bc7a00; } /* Preprocessor */
+    pre code span.sc { color: #4070a0; } /* SpecialChar */
+    pre code span.ss { color: #bb6688; } /* SpecialString */
+    pre code span.st { color: #4070a0; } /* String */
+    pre code span.va { color: #19177c; } /* Variable */
+    pre code span.vs { color: #4070a0; } /* VerbatimString */
+    pre code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+    footer {
+        padding-top: 3em;
+        font-style: italic;
+        font-size: .9em;
+    }
+</style>
+</head><body data-new-gr-c-s-check-loaded="14.1075.0" data-gr-ext-installed="">
+<p><em>[version_1.0]</em></p>
+<div style="background-color: #FFD2D2; padding: 15px; margin-bottom: 25px">
+<h3>
+<span class="fa fa-info-circle"></span> Note
+</h3>
+<p>The exercises in this course will have an associated charge in your AWS account. In this exercise, you will create the following resources:</p>
+<ul>
+<li>Amazon Simple Storage Service (Amazon S3) bucket</li>
+<li>AWS CodeDeploy application and deployment group</li>
+</ul>
+<p><strong>The final exercise includes instructions to delete all the resources that you create in the exercises.</strong></p>
+<p>Familiarize yourself with <strong><a href="https://aws.amazon.com/s3/pricing/" target="_blank">Amazon S3 pricing</a></strong>, <strong><a href="https://aws.amazon.com/codedeploy/pricing/" target="_blank">AWS CodeDeploy</a></strong>, and <strong><a href="https://aws.amazon.com/free/" target="_blank">AWS Free Tier</a></strong>.</p>
+</div>
+<h1 id="exercise-deploying-aws-codedeploy-revisions">Exercise: Deploying AWS CodeDeploy Revisions</h1>
+<p>In this exercise, you will create an S3 bucket and upload the blog to that bucket. You will also set up the CodeDeploy group and make a revision that will then be deployed.</p>
+<h2 id="task-1-creating-an-s3-bucket-and-uploading-the-.zip-file">Task 1: Creating an S3 bucket and uploading the .zip file</h2>
+<p>In this task, you create an S3 bucket and upload the blog data to it.</p>
+<ol type="1">
+<li><p>Choose <strong>Services</strong>, then search for and open <strong>EC2</strong>.</p></li>
+<li><p>In the navigation pane, choose <strong>Instances</strong>.</p></li>
+<li><p>Confirm that the <code>TEST-environment</code> instance is running. If you need to restart the instance, choose <strong>Instance state</strong> and select <strong>Start instance</strong>.</p></li>
+<li><p>Choose <strong>Services</strong>, then search for and open <strong>S3</strong>.</p></li>
+<li><p>Choose <strong>Create bucket</strong>.</p></li>
+<li><p>In <strong>Bucket name</strong>, enter a name. The bucket must have a unique name. As an example, you can use the following format: <code>devops-exercise2-&lt;your_initials&gt;-&lt;random_number&gt;</code> <strong>Note:</strong> If the bucket name you entered is already being used, try entering a different number.</p></li>
+<li><p>Make sure that the <strong>AWS Region</strong> is <strong>US West (Oregon) us-west-2</strong>, which is the <em>same</em> Region where you will deploy your CodeDeploy group.</p></li>
+<li><p>Choose <strong>Create bucket</strong>. The bucket you created should appear in the list of buckets.</p></li>
+<li><p>Download the following file: <a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C2/downloads/Blog.zip" target="_blank">Blog.zip</a></p></li>
+<li><p>Back in the S3 console, choose the <strong>Name</strong> link for the bucket you created and then choose <strong>Upload</strong>.</p></li>
+<li><p>Choose <strong>Add files</strong>, then browse to where you saved the <code>Blog.zip</code> file, open the file, and choose <strong>Upload</strong>.</p></li>
+<li><p>Choose <strong>Close</strong>.</p></li>
+</ol>
+<h2 id="task-2-creating-and-configuring-the-codedeploy-application">Task 2: Creating and configuring the CodeDeploy application</h2>
+<p>In this task, you create and configure the CodeDeploy application.</p>
+<ol type="1">
+<li><p>Choose <strong>Services</strong>, and search for and open <strong>CodeDeploy</strong>.</p></li>
+<li><p>In the navigation pane under <strong>Deploy</strong>, choose <strong>Applications</strong>.</p></li>
+<li>Choose <strong>Create application</strong> and configure the following settings.
+<ul>
+<li><strong>Application name</strong>: <code>TestApplication</code></li>
+<li><strong>Compute platform</strong>: <em>EC2/On-premises</em></li>
+</ul></li>
+<li><p>Choose <strong>Create application</strong>.</p></li>
+<li>Choose <strong>Create deployment group</strong> and configure the following settings.
+<ul>
+<li><strong>Deployment group name</strong>: <code>TestDeploymentGroup</code></li>
+<li><strong>Service role</strong>: <code>CodeDeployServiceRole</code></li>
+<li><strong>Deployment type</strong>: Keep <em>In-place</em> selected</li>
+<li><strong>Environment configuration</strong>: <em>Amazon EC2 instances</em>
+<ul>
+<li><strong>Key</strong>: <code>Name</code></li>
+<li><strong>Value</strong>: <code>TEST-environment</code></li>
+</ul></li>
+<li><strong>Agent configuration with AWS Systems Manager &gt; Install AWS CodeDeploy Agent</strong>: <em>Never</em></li>
+<li><strong>Deployment settings</strong>: Keep <em>CodeDeployDefault.AllAtOnce</em> selected</li>
+<li><strong>Load balancer</strong>: Clear <em>Enable load balancing</em></li>
+</ul></li>
+<li><p>Choose <strong>Create deployment group</strong>.</p></li>
+<li>Choose <strong>Create deployment</strong> and configure the following settings.
+<ul>
+<li><strong>Deployment group</strong>: Keep <em>TestDeploymentGroup</em> selected</li>
+<li><strong>Revision location</strong>: Use the S3 bucket and Blog.zip file that you created previously (example URL format: <code>s3://devops-exercise2-&lt;your_initials&gt;-&lt;random_number&gt;/Blog.zip</code>)</li>
+<li><strong>Revision file type</strong>: <em>.zip</em></li>
+<li><strong>Deployment description</strong>: Feel free to add a description</li>
+</ul></li>
+<li><p>Choose <strong>Create deployment</strong>.</p></li>
+<li><p>In the <strong>Deployment lifecycle events</strong> section, choose the <strong>Instance ID</strong> link.</p></li>
+<li><p>Select the <code>TEST-environment</code> instance.</p></li>
+<li><p>Copy the <strong>Public IPv4 address</strong> or <strong>Public IPv4 DNS</strong> address and paste it in a new browser tab.</p></li>
+</ol>
+<p>You should now see the DevOps blog.</p>
+<h2 id="task-3-uploading-the-new-revision">Task 3: Uploading the new revision</h2>
+<p>In this task, you edit some of the code for the blog website. You then deploy the new changes to your bucket and the CodeDeploy group.</p>
+<ol type="1">
+<li><p>On your local computer, extract the <code>Blog.zip</code> file.</p></li>
+<li><p>In a text editor, open the <code>index.html</code> file.</p></li>
+<li>Make two changes to the <code>index.html</code> file by changing the values for <strong><em>background-color</em></strong> and <strong><em>Version</em></strong>.
+<ul>
+<li>Locate <code>background-color: #0000FF;</code> and change it to <code>background-color: #FFC0CB;</code></li>
+<li>Locate <code>Version 1</code> and change to <code>Version 2</code></li>
+</ul></li>
+<li><p>Save the file and re-compress the files into a <code>Blog.zip</code> file.</p></li>
+<li><p>Back in the AWS Management Console, search for and open <strong>S3</strong>.</p></li>
+<li><p>Under <strong>Buckets</strong>, choose the link for the bucket you created in Task 1.</p></li>
+<li><p>Select <code>Blog.zip</code> and choose <strong>Delete</strong>.</p></li>
+<li><p>In the <strong>Permanently delete objects?</strong> section, enter <code>permanently delete</code> and then choose <strong>Delete objects</strong>.</p></li>
+<li><p>Choose <strong>Close</strong>.</p></li>
+<li><p>Choose <strong>Upload</strong>, and then choose <strong>Add files</strong>.</p></li>
+<li><p>Browse to the edited <code>Blog.zip</code> file that’s on your local computer, and open it.</p></li>
+<li><p>Choose <strong>Upload</strong>.</p></li>
+<li><p>Choose <strong>Services</strong>, and search for and open <strong>CodeDeploy</strong>.</p></li>
+<li><p>In the navigation pane, choose <strong>Deploy &gt; Application</strong> and choose the <strong>TestApplication</strong> link.</p></li>
+<li>Choose the <strong>TestDeploymentGroup</strong> link, choose <strong>Create deployment</strong>, and configure the following settings:
+<ul>
+<li><strong>Revision location</strong>: Again, use the S3 location that you used for the previous deployment (example format: <code>s3://devops-exercise2-&lt;your_initials&gt;-&lt;random_number&gt;/Blog.zip</code>)</li>
+<li><strong>Revision file type</strong>: <em>.zip</em><br>
+</li>
+<li><strong>Deployment description</strong>: <code>Deploys version 2 of the application to the TEST environment</code></li>
+</ul></li>
+<li><p>Choose <strong>Create deployment</strong>.</p></li>
+<li><p>Under <strong>Deployment lifecycle events</strong>, choose the <strong>Instance ID</strong>.</p></li>
+<li><p>Select the <code>TEST-environment</code> instance.</p></li>
+<li><p>Copy the <strong>Public IPv4 address</strong> or <strong>Public IPv4 DNS</strong> address and paste it into a new browser tab.</p></li>
+</ol>
+<p>You should now see the DevOps blog with the new revisions.</p>
+<script>
+document.body.innerHTML = document.body.innerHTML.replace(/https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C2/(.+)/g, function (match, capture) {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = capture;
+  return new URL(tmp.textContent || tmp.innerText || "", document.baseURI).href;
+});
+</script>
+
+<footer>
+    <p>© 2021 Amazon Web Services, Inc. or its affiliates. All rights reserved. This work may not be reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited. Corrections, feedback, or other questions? Contact us at <a href="https://support.aws.amazon.com/#/contacts/aws-training" target="_blank">https://support.aws.amazon.com/#/contacts/aws-training</a>. All trademarks are the property of their owners.</p>
+</footer>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

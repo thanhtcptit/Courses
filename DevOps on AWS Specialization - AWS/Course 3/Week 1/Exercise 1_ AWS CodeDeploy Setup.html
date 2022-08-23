@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!-- saved from url=(0091)https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C2/exercise-1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Exercise 1: AWS CodeDeploy Setup</title>
+  <script src="./Exercise 1_ AWS CodeDeploy Setup_files/clipboard.min.js"></script>
+  <script src="./Exercise 1_ AWS CodeDeploy Setup_files/copybutton.js"></script>
+
+<style>
+    html, body, footer {
+        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        margin: 1em;
+    }
+
+    img:not(.clipboard){
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }
+
+    /* Copy buttons */
+    button.copybtn {
+        webkit-transition: opacity .3s ease-in-out;
+        -o-transition: opacity .3s ease-in-out;
+        transition: opacity .3s ease-in-out;
+        opacity: 0;
+        padding: 2px 6px;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+    }
+    div.sourceCode:hover .copybtn, div.sourceCode .copybtn:focus {
+        opacity: .3;
+    }
+    div.sourceCode .copybtn:hover {
+        opacity: 1;
+    }
+    div.sourceCode {
+        position: relative;
+    }
+    .xmodule_display.xmodule_HtmlBlock ol {
+        padding: 0 0 0 2em !important;
+    }
+    .xmodule_display.xmodule_HtmlBlock ul {
+        padding: 0 0 0 2em !important;
+    }
+
+    code {
+        padding: 2px 4px !important;
+        background-color: #eee !important;
+        border-radius: 4px;
+    }
+    pre code {
+        padding: 9.5px !important;
+        background-color: #f5f5f5 !important;
+        display: block;
+        overflow-x: auto;
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        word-break: break-all;
+        word-wrap: break-word;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        white-space: pre;
+    }
+    pre code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    pre code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    pre code span.at { color: #7d9029; } /* Attribute */
+    pre code span.bn { color: #40a070; } /* BaseN */
+    pre code span.bu { color: #06287e; } /* BuiltIn */
+    pre code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    pre code span.ch { color: #4070a0; } /* Char */
+    pre code span.cn { color: #880000; } /* Constant */
+    pre code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    pre code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    pre code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    pre code span.dt { color: #902000; } /* DataType */
+    pre code span.dv { color: #40a070; } /* DecVal */
+    pre code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    pre code span.ex { color: #06287e; } /* Extension */
+    pre code span.fl { color: #40a070; } /* Float */
+    pre code span.fu { color: #06287e; } /* Function */
+    pre code span.im { } /* Import */
+    pre code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    pre code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    pre code span.op { color: #666666; } /* Operator */
+    pre code span.ot { color: #007020; } /* Other */
+    pre code span.pp { color: #bc7a00; } /* Preprocessor */
+    pre code span.sc { color: #4070a0; } /* SpecialChar */
+    pre code span.ss { color: #bb6688; } /* SpecialString */
+    pre code span.st { color: #4070a0; } /* String */
+    pre code span.va { color: #19177c; } /* Variable */
+    pre code span.vs { color: #4070a0; } /* VerbatimString */
+    pre code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+    footer {
+        padding-top: 3em;
+        font-style: italic;
+        font-size: .9em;
+    }
+</style>
+</head><body data-new-gr-c-s-check-loaded="14.1075.0" data-gr-ext-installed="">
+<p><em>[version_1.0]</em></p>
+<div style="background-color: #FFD2D2; padding: 15px; margin-bottom: 25px">
+<h3>
+<span class="fa fa-info-circle"></span> Note
+</h3>
+<p>The exercises in this course will have an associated charge in your AWS account. In this exercise, you will create the following resources:</p>
+<ul>
+<li>AWS Identity and Access Management (IAM) roles</li>
+<li>Amazon Elastic Compute Cloud (Amazon EC2) instance</li>
+</ul>
+<p><strong>The final exercise includes instructions to delete all the resources that you create in the exercises.</strong></p>
+<p>Familiarize yourself with <strong><a href="https://aws.amazon.com/ec2/pricing/" target="_blank">Amazon EC2 pricing</a></strong> and the <strong><a href="https://aws.amazon.com/free/" target="_blank">AWS Free Tier</a></strong>.</p>
+</div>
+<h1 id="exercise-setting-up-aws-codedeploy">Exercise: Setting Up AWS CodeDeploy</h1>
+<p>In this exercise, you will create the IAM roles that are needed to complete the exercise. You will launch an EC2 instance and install the CodeDeploy agent onto that instance.</p>
+<h2 id="task-1-setting-up-iam">Task 1: Setting up IAM</h2>
+<p>In this task, you create the required IAM roles and assign the necessary permissions to them.</p>
+<ol type="1">
+<li><p>In the AWS Management Console, choose <strong>Services</strong>, and search for and open <strong>IAM</strong>.</p></li>
+<li><p>In the navigation pane, choose <strong>Roles</strong> and then choose <strong>Create role</strong>.</p></li>
+<li>In the <strong>Create role</strong> page, configure the following settings.
+<ul>
+<li><strong>Select type of trusted entity</strong>: Keep <em>AWS service</em> selected</li>
+<li><strong>Choose a use case</strong>: <em>CodeDeploy</em></li>
+<li><strong>Select your use case</strong>: <em>CodeDeploy</em></li>
+</ul></li>
+<li><p>Choose <strong>Next: Permissions</strong>.</p></li>
+<li><p>Skip the <strong>Attached permissions policies</strong> and <strong>Add tags (optional)</strong> pages by choosing <strong>Next: Tags</strong> and then choosing <strong>Next: Review</strong>.</p></li>
+<li><p>For <strong>Role name</strong>, enter <code>CodeDeployServiceRole</code> and choose <strong>Create role</strong>.</p></li>
+<li>Create another role by choosing <strong>Create role</strong> and configuring these role settings.
+<ul>
+<li><strong>Select type of trusted entity</strong>: Again, keep <em>AWS service</em> selected</li>
+<li><strong>Choose a use case</strong>: <em>EC2</em></li>
+</ul></li>
+<li><p>Choose <strong>Next: Permissions</strong>.</p></li>
+<li><p>In the <strong>Filter policies</strong> search box, enter <code>s3full</code> and select the <strong>AmazonS3FullAccess</strong> policy.</p></li>
+<li><p>Search the policies again for <code>ssmmanaged</code> and select the <strong>AmazonSSMManagedInstanceCore</strong> policy.</p></li>
+<li><p>Skip the next two pages by choosing <strong>Next: Tags</strong> and then choosing <strong>Next: Review</strong>.</p></li>
+<li><p>For <strong>Role name</strong>, enter <code>EC2S3FullAccess</code> and choose <strong>Create role</strong>.</p></li>
+</ol>
+<h2 id="task-2-setting-up-the-ec2-instance">Task 2: Setting up the EC2 instance</h2>
+<p>In this task, you configure and launch an EC2 instance to work with AWS Systems Manager Session Manager.</p>
+<ol type="1">
+<li><p>In the console, choose <strong>Services</strong>, and search for and open <strong>EC2</strong>. <em>Make sure you are in the Oregon (us-west-2) Region</em>.</p></li>
+<li><p>In the navigation pane, choose <strong>Instances</strong> and then choose <strong>Launch instances</strong>.</p></li>
+<li><p>From the list of Amazon Machine Images (AMIs), select the <strong>Amazon Linux 2 AMI (HVM), SSD Volume Type</strong>, and keep the <em>t2.micro</em> instance type selected.</p></li>
+<li><p>Choose <strong>Next: Configure Instance Details</strong>.</p></li>
+<li>In the <strong>Configure Instance Details</strong> page, configure the following settings, but keep the remaining default values.
+<ul>
+<li><strong>Auto-assign Public IP</strong>: <em>Enable</em></li>
+<li><strong>IAM role</strong>: <em>EC2S3FullAccess</em></li>
+</ul></li>
+<li><p>Choose <strong>Next: Add Storage</strong> and skip the <strong>Add Storage</strong> page by choosing <strong>Next: Add Tags</strong>.</p></li>
+<li>Choose <strong>Add Tag</strong> and enter the following key-value pair.
+<ul>
+<li><strong>Key</strong>: <code>Name</code></li>
+<li><strong>Value</strong>: <code>TEST-environment</code></li>
+</ul></li>
+<li><p>Choose <strong>Next: Configure Security Group</strong>.</p></li>
+<li>Configure the security group by selecting the following settings.
+<ul>
+<li><strong>Type</strong>: <em>HTTP</em></li>
+<li><strong>Source</strong>: <em>Anywhere</em></li>
+</ul></li>
+<li><p>Choose <strong>Review and Launch</strong>, and then choose <strong>Launch</strong>.</p></li>
+<li><p>In the dialog box, select <strong>Proceed without a key pair</strong>, select the acknowledgement box, and choose <strong>Launch Instances</strong>.</p></li>
+<li><p>In the <strong>Launch Status</strong> screen, open the list of EC2 instances by choosing the instance ID.</p></li>
+<li><p>Wait for the <strong>Instance state</strong> column to change to <em>Running</em> and the <strong>Status check</strong> column to change to <em>passed</em>.</p></li>
+</ol>
+<h2 id="task-3-installing-the-codedeploy-agent">Task 3: Installing the CodeDeploy agent</h2>
+<p>In this task you, install the CodeDeploy agent onto the EC2 instance.</p>
+<ol type="1">
+<li><p>From the list of instances, open the <strong>TEST-environment</strong> instance details by choosing the <strong>Instance ID</strong> link.</p></li>
+<li><p>In the instance summary, choose <strong>Connect</strong>.</p></li>
+<li><p>In <strong>Connect to instance</strong>, choose the <strong>Session Manager</strong> tab and then choose <strong>Connect</strong>.</p></li>
+<li><p>In the terminal window, install the CodeDeploy agent by running the following commands. <strong>Note</strong>: <em>wget might already be installed.</em></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash" id="codeblock0"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" title="1"><span class="fu">sudo</span> yum update -y</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="fu">sudo</span> yum install ruby -y</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="fu">sudo</span> yum install wget -y</a></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock0"><img class="clipboard" src="./Exercise 1_ AWS CodeDeploy Setup_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div></li>
+<li><p>Install the latest version of the agent.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash" id="codeblock1"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" title="1"><span class="bu">cd</span> ~</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="fu">wget</span> https://aws-codedeploy-us-west-2.s3.us-west-2.amazonaws.com/latest/install</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="fu">chmod</span> +x ./install</a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="fu">sudo</span> ./install auto</a></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock1"><img class="clipboard" src="./Exercise 1_ AWS CodeDeploy Setup_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div></li>
+<li><p>Verify that the agent is running.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash" id="codeblock2"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" title="1"><span class="fu">sudo</span> service codedeploy-agent status</a></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock2"><img class="clipboard" src="./Exercise 1_ AWS CodeDeploy Setup_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div></li>
+</ol>
+<p><strong>Note</strong>: <em>If the agent does not show as running, try the following commands.</em></p>
+<pre><code>``` bash
+sudo service codedeploy-agent start
+sudo service codedeploy-agent status
+```</code></pre>
+<ol type="1">
+<li>If you will work on the next exercise at a later time, you can choose to stop the instance so you don’t incur any additional cost. To stop the instance:
+<ul>
+<li>In the <strong>Instances</strong> page, select the <strong>TEST-environment</strong> check box.</li>
+<li>From the <strong>Instance state</strong> menu, select <strong>Stop instance</strong>.</li>
+<li>You can restart the instance by choosing <strong>Instance state</strong> and selecting <strong>Start instance</strong>.</li>
+</ul></li>
+</ol>
+<p>You will use this instance in the next exercise, where you will set up the CodeDeploy group and make some revisions to the code.</p>
+<script>
+document.body.innerHTML = document.body.innerHTML.replace(/https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C2/(.+)/g, function (match, capture) {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = capture;
+  return new URL(tmp.textContent || tmp.innerText || "", document.baseURI).href;
+});
+</script>
+
+<footer>
+    <p>© 2021 Amazon Web Services, Inc. or its affiliates. All rights reserved. This work may not be reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited. Corrections, feedback, or other questions? Contact us at <a href="https://support.aws.amazon.com/#/contacts/aws-training" target="_blank">https://support.aws.amazon.com/#/contacts/aws-training</a>. All trademarks are the property of their owners.</p>
+</footer>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!-- saved from url=(0091)https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C2/exercise-3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Exercise 3: AWS CloudFormation</title>
+  <script src="./Exercise 3_ AWS CloudFormation_files/clipboard.min.js"></script>
+  <script src="./Exercise 3_ AWS CloudFormation_files/copybutton.js"></script>
+
+<style>
+    html, body, footer {
+        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        margin: 1em;
+    }
+
+    img:not(.clipboard){
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }
+
+    /* Copy buttons */
+    button.copybtn {
+        webkit-transition: opacity .3s ease-in-out;
+        -o-transition: opacity .3s ease-in-out;
+        transition: opacity .3s ease-in-out;
+        opacity: 0;
+        padding: 2px 6px;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+    }
+    div.sourceCode:hover .copybtn, div.sourceCode .copybtn:focus {
+        opacity: .3;
+    }
+    div.sourceCode .copybtn:hover {
+        opacity: 1;
+    }
+    div.sourceCode {
+        position: relative;
+    }
+    .xmodule_display.xmodule_HtmlBlock ol {
+        padding: 0 0 0 2em !important;
+    }
+    .xmodule_display.xmodule_HtmlBlock ul {
+        padding: 0 0 0 2em !important;
+    }
+
+    code {
+        padding: 2px 4px !important;
+        background-color: #eee !important;
+        border-radius: 4px;
+    }
+    pre code {
+        padding: 9.5px !important;
+        background-color: #f5f5f5 !important;
+        display: block;
+        overflow-x: auto;
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        word-break: break-all;
+        word-wrap: break-word;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        white-space: pre;
+    }
+    pre code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    pre code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    pre code span.at { color: #7d9029; } /* Attribute */
+    pre code span.bn { color: #40a070; } /* BaseN */
+    pre code span.bu { color: #06287e; } /* BuiltIn */
+    pre code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    pre code span.ch { color: #4070a0; } /* Char */
+    pre code span.cn { color: #880000; } /* Constant */
+    pre code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    pre code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    pre code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    pre code span.dt { color: #902000; } /* DataType */
+    pre code span.dv { color: #40a070; } /* DecVal */
+    pre code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    pre code span.ex { color: #06287e; } /* Extension */
+    pre code span.fl { color: #40a070; } /* Float */
+    pre code span.fu { color: #06287e; } /* Function */
+    pre code span.im { } /* Import */
+    pre code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    pre code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    pre code span.op { color: #666666; } /* Operator */
+    pre code span.ot { color: #007020; } /* Other */
+    pre code span.pp { color: #bc7a00; } /* Preprocessor */
+    pre code span.sc { color: #4070a0; } /* SpecialChar */
+    pre code span.ss { color: #bb6688; } /* SpecialString */
+    pre code span.st { color: #4070a0; } /* String */
+    pre code span.va { color: #19177c; } /* Variable */
+    pre code span.vs { color: #4070a0; } /* VerbatimString */
+    pre code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+    footer {
+        padding-top: 3em;
+        font-style: italic;
+        font-size: .9em;
+    }
+</style>
+</head><body data-new-gr-c-s-check-loaded="14.1075.0" data-gr-ext-installed="">
+<p><em>[version_1.0]</em></p>
+<div style="background-color: #FFD2D2; padding: 15px; margin-bottom: 25px">
+<h3>
+<span class="fa fa-info-circle"></span> Note
+</h3>
+<p>The exercises in this course will have an associated charge in your AWS account. In this exercise, you will create the following resources:</p>
+<ul>
+<li>Amazon Simple Storage Service (Amazon S3) bucket</li>
+<li>AWS CodeDeploy application and deployment group</li>
+<li>AWS CodeCommit repository</li>
+<li>AWS Identity and Access Management (IAM) roles</li>
+<li>Amazon Elastic Compute Cloud (Amazon EC2) instance</li>
+<li>AWS CodePipeline pipeline</li>
+</ul>
+<p><strong>This final exercise includes instructions to delete all the resources that you created in the course exercises.</strong></p>
+<p>Familiarize yourself with <strong><a href="https://aws.amazon.com/s3/pricing/" target="_blank">Amazon S3 pricing</a></strong>, <strong><a href="https://aws.amazon.com/codedeploy/pricing/" target="_blank">AWS CodeDeploy pricing</a></strong>, <strong><a href="https://aws.amazon.com/codecommit/pricing/" target="_blank">AWS CodeCommit pricing</a></strong>, <strong><a href="https://aws.amazon.com/codepipeline/pricing/" target="_blank">AWS CodePipeline pricing</a></strong>, <strong><a href="https://aws.amazon.com/ec2/pricing/" target="_blank">Amazon EC2 pricing</a></strong>, and the <strong><a href="https://aws.amazon.com/free/" target="_blank">AWS Free Tier</a></strong>.</p>
+</div>
+<h1 id="exercise-working-with-aws-cloudformation-and-aws-codepipeline">Exercise: Working with AWS CloudFormation and AWS CodePipeline</h1>
+<p>In this exercise, you will use a provided CloudFormation template to set up the backend services such as CodePipeline, CodeCommit, CodeDeploy, and CodeBuild. You will then upload new revisions to the pipeline.</p>
+<h2 id="task-1-setting-up-the-backend-with-cloudformation">Task 1: Setting up the backend with CloudFormation</h2>
+<p>In this task, you deploy a CloudFormation stack that will set up the backend architecture for this exercise.</p>
+<ol type="1">
+<li><p>Download the following CloudFormation template: <a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C2/downloads/final_pipeline.yaml" target="_blank">final_pipeline.yaml</a></p></li>
+<li><p>In the AWS Management Console, choose <strong>Services</strong>, and search for and choose <strong>CloudFormation</strong>.</p></li>
+<li><p>In the CloudFormation console, choose <strong>Create stack</strong> and choose <strong>With new resources (standard)</strong>.</p></li>
+<li><p>In the <strong>Specify template</strong> page, select <strong>Upload a template file</strong> and select <strong>Choose file</strong>.</p></li>
+<li><p>Upload the <code>final_pipeline.yaml</code> file by opening the directory where you downloaded it, choosing the <code>final_pipeline.yaml</code> file, and choosing <strong>Open</strong>.</p></li>
+<li><p>Choose <strong>Next</strong>.</p></li>
+<li>In the <strong>Specify stack details</strong> page, enter the following values.</li>
+</ol>
+<ul>
+<li><strong>Stack name</strong>: <code>final-pipeline</code></li>
+<li><strong>Parameters &gt; CodePipelineName</strong>: <code>final-pipeline</code></li>
+</ul>
+<ol type="1">
+<li><p>Choose <strong>Next</strong>.</p></li>
+<li><p>Skip <strong>Configure stack options</strong> by choosing <strong>Next</strong>.</p></li>
+<li><p>At the bottom of the <strong>Review final-pipeline</strong> page, select <strong>I acknowledge that AWS CloudFormation might create IAM resources with custom names</strong> and choose <strong>Create stack</strong>.</p></li>
+</ol>
+<p><em>Creating the stack can take some time to complete. Allow the stack to finish before you continue to the next task</em>.</p>
+<p>The template will create a CodeDeploy application (<code>CodePipeBlogSampleApplication</code>), and a deployment group (<code>MyDemoDeploymentGroup</code>). The stack also contains the following resources: * CodeCommit repository (<code>NewsletterRepo</code>) * CodePipeline pipeline (<code>final-pipeline</code>) * S3 bucket for the pipeline artifacts * EC2 instance (<code>CodePipelineBlog</code>) * CodeBuild project (<code>NewsletterBuild</code>)</p>
+<h2 id="task-2-viewing-deployment-events-in-codepipeline">Task 2: Viewing deployment events in CodePipeline</h2>
+<p>In this task, you view the deployment events in the pipeline.</p>
+<ol type="1">
+<li><p>In the console, use the <strong>Services</strong> search box to find and open <strong>AWS CodePipeline</strong>.</p></li>
+<li><p>Under <strong>Pipelines</strong>, choose <code>final-pipeline</code>.</p></li>
+<li><p>Under <strong>Deploy</strong>, choose <strong>Details</strong>.</p></li>
+<li><p>In the details page, scroll to the bottom, and under <strong>Deployment lifecycle events</strong>, choose the <strong>Instance ID</strong>.</p></li>
+<li><p>Open the instance details pane by selecting the check box for the <code>CodePipelineBlog</code> instance.</p></li>
+<li><p>In the <strong>Instance summary</strong> page, copy the <strong>Public IPv4 DNS</strong> address and paste it in a browser.</p></li>
+</ol>
+<p>You should see the blog, which was deployed automatically using the CloudFormation template.</p>
+<ol type="1">
+<li><p>Switch back to the <strong>CodeDeploy</strong> tab.</p></li>
+<li><p>In the navigation pane, expand <strong>Pipeline</strong> and choose <strong>Pipelines</strong>.</p></li>
+<li><p>Choose the <code>final-pipeline</code> link.</p></li>
+<li><p>Under <strong>AcceptanceTest</strong>, choose <strong>Details</strong>.</p></li>
+</ol>
+<p>Review the details and note all the acceptance tests (which are in blue). These tests were used to verify that the application was deployed and tested successfully.</p>
+<h2 id="task-3-committing-a-new-revision">Task 3: Committing a new revision</h2>
+<p>In this task, you make a new revision to the blog website and commit those changes.</p>
+<ol type="1">
+<li><p>Use the <strong>Services</strong> search box to find and open <strong>CloudShell</strong>. Wait for the shell to initialize.</p></li>
+<li><p>Inside the shell, run the following commands:</p>
+<p>Configure Git and clone the repository:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash" id="codeblock0"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" title="1"><span class="fu">git</span> config --global user.email <span class="st">"YOUR_EMAIL"</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="fu">git</span> config --global user.name <span class="st">"YOUR_NAME"</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="fu">git</span> clone codecommit://NewsletterRepo</a></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock0"><img class="clipboard" src="./Exercise 3_ AWS CloudFormation_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div>
+<p>Change the color of the horizontal rule (<code>&lt;hr&gt;</code> HTML tag) and the blog version number:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash" id="codeblock1"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" title="1"><span class="bu">cd</span> NewsletterRepo/</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="fu">sed</span> -i <span class="st">'s/#0000FF/#800080/g'</span> index.html</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="fu">sed</span> -i <span class="st">'s/Version 1/Version 2/g'</span> index.html</a></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock1"><img class="clipboard" src="./Exercise 3_ AWS CloudFormation_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div>
+<p>View the changes:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash" id="codeblock2"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" title="1"><span class="fu">git</span> diff</a></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock2"><img class="clipboard" src="./Exercise 3_ AWS CloudFormation_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div>
+<p>Create a commit and push the changes:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash" id="codeblock3"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" title="1"><span class="fu">git</span> add *</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="fu">git</span> commit -m <span class="st">"version 2 new hr color"</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="fu">git</span> push</a></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock3"><img class="clipboard" src="./Exercise 3_ AWS CloudFormation_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div></li>
+<li><p>In the console, search for and open <strong>CodePipeline</strong>.</p></li>
+</ol>
+<p>You should see a pipeline execution that was started by the new commit. <!-- This is always called an execution https://docs.aws.amazon.com/codepipeline/latest/userguide/concepts-how-it-works.html --></p>
+<ol type="1">
+<li>View the details by choosing the link for the most recent pipeline execution.</li>
+</ol>
+<p>The pipeline execution might take a few minutes to finish.</p>
+<ol type="1">
+<li><p>After <code>AcceptanceTest</code> is complete, search for and open <strong>EC2</strong>.</p></li>
+<li><p>If you are not in the <strong>Instances</strong> page, from the navigation pane, expand <strong>Instances</strong> and then choose <strong>Instances</strong>.</p></li>
+<li><p>Open the instance details section by selecting the check box for the <code>CodePipelineBlog</code> instance.</p></li>
+<li><p>Copy the <strong>Public IPv4 address</strong> and paste it in a new browser tab.</p></li>
+</ol>
+<p>You should see the new changes that you made reflected in the blog.</p>
+<h2 id="deleting-all-exercise-resources">Deleting all exercise resources</h2>
+<p>Congratulations! You have successfully completed the course project. In this task, you delete the AWS resources that you created for this project.</p>
+<ol type="1">
+<li>Open the <strong>Amazon S3</strong> console.</li>
+</ol>
+<ul>
+<li>Empty and delete the bucket that you created for the previous exercise. It might have a name similar to: <strong>devops-exercise2-&lt;your_initials&gt;-&lt;random_number&gt;</strong></li>
+<li>Empty and delete the bucket with the name: <strong>final-pipeline-codepipelineartifactstores3bucket-&lt;random_string&gt;</strong>.</li>
+</ul>
+<ol type="1">
+<li>Open the <strong>AWS CloudFormation</strong> console.</li>
+</ol>
+<ul>
+<li>Delete the <strong>final-pipeline</strong> stack.</li>
+</ul>
+<ol type="1">
+<li>Open the <strong>Amazon EC2</strong> console.
+<ul>
+<li>Terminate the <strong>TEST-environment</strong> instance that you created in the previous exercise.</li>
+</ul></li>
+<li>Open the <strong>CodeDeploy</strong> console, and from the navigation pane, choose <strong>Applications</strong>.</li>
+</ol>
+<ul>
+<li>Delete <strong>TestApplication</strong> that you created in the previous exercise.</li>
+</ul>
+<script>
+document.body.innerHTML = document.body.innerHTML.replace(/https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C2/(.+)/g, function (match, capture) {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = capture;
+  return new URL(tmp.textContent || tmp.innerText || "", document.baseURI).href;
+});
+</script>
+
+<footer>
+    <p>© 2021 Amazon Web Services, Inc. or its affiliates. All rights reserved. This work may not be reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited. Corrections, feedback, or other questions? Contact us at <a href="https://support.aws.amazon.com/#/contacts/aws-training" target="_blank">https://support.aws.amazon.com/#/contacts/aws-training</a>. All trademarks are the property of their owners.</p>
+</footer>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

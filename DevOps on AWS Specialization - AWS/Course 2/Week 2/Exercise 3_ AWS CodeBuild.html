@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!-- saved from url=(0091)https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Exercise 3: AWS CodeBuild</title>
+  <script src="./Exercise 3_ AWS CodeBuild_files/clipboard.min.js"></script>
+  <script src="./Exercise 3_ AWS CodeBuild_files/copybutton.js"></script>
+
+<style>
+    html, body, footer {
+        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        margin: 1em;
+    }
+
+    img:not(.clipboard){
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }
+
+    /* Copy buttons */
+    button.copybtn {
+        webkit-transition: opacity .3s ease-in-out;
+        -o-transition: opacity .3s ease-in-out;
+        transition: opacity .3s ease-in-out;
+        opacity: 0;
+        padding: 2px 6px;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+    }
+    div.sourceCode:hover .copybtn, div.sourceCode .copybtn:focus {
+        opacity: .3;
+    }
+    div.sourceCode .copybtn:hover {
+        opacity: 1;
+    }
+    div.sourceCode {
+        position: relative;
+    }
+    .xmodule_display.xmodule_HtmlBlock ol {
+        padding: 0 0 0 2em !important;
+    }
+    .xmodule_display.xmodule_HtmlBlock ul {
+        padding: 0 0 0 2em !important;
+    }
+
+    code {
+        padding: 2px 4px !important;
+        background-color: #eee !important;
+        border-radius: 4px;
+    }
+    pre code {
+        padding: 9.5px !important;
+        background-color: #f5f5f5 !important;
+        display: block;
+        overflow-x: auto;
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        word-break: break-all;
+        word-wrap: break-word;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        white-space: pre;
+    }
+    pre code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    pre code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    pre code span.at { color: #7d9029; } /* Attribute */
+    pre code span.bn { color: #40a070; } /* BaseN */
+    pre code span.bu { color: #06287e; } /* BuiltIn */
+    pre code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    pre code span.ch { color: #4070a0; } /* Char */
+    pre code span.cn { color: #880000; } /* Constant */
+    pre code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    pre code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    pre code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    pre code span.dt { color: #902000; } /* DataType */
+    pre code span.dv { color: #40a070; } /* DecVal */
+    pre code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    pre code span.ex { color: #06287e; } /* Extension */
+    pre code span.fl { color: #40a070; } /* Float */
+    pre code span.fu { color: #06287e; } /* Function */
+    pre code span.im { } /* Import */
+    pre code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    pre code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    pre code span.op { color: #666666; } /* Operator */
+    pre code span.ot { color: #007020; } /* Other */
+    pre code span.pp { color: #bc7a00; } /* Preprocessor */
+    pre code span.sc { color: #4070a0; } /* SpecialChar */
+    pre code span.ss { color: #bb6688; } /* SpecialString */
+    pre code span.st { color: #4070a0; } /* String */
+    pre code span.va { color: #19177c; } /* Variable */
+    pre code span.vs { color: #4070a0; } /* VerbatimString */
+    pre code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+    footer {
+        padding-top: 3em;
+        font-style: italic;
+        font-size: .9em;
+    }
+</style>
+</head><body data-new-gr-c-s-check-loaded="14.1075.0" data-gr-ext-installed="">
+<p><em>[version_1.0]</em></p>
+<div style="background-color: #FFD2D2; padding: 15px; margin-bottom: 25px">
+<h3>
+<span class="fa fa-info-circle"></span> Note
+</h3>
+<p>The exercises in this course will have an associated charge in your AWS account. In this exercise, you will create the following resources:</p>
+<ul>
+<li>AWS CodeBuild build project</li>
+</ul>
+<p><strong>The final exercise includes instructions to delete all the resources that you create in the exercises.</strong></p>
+<p>Familiarize yourself with <strong><a href="https://aws.amazon.com/codebuild/pricing/" target="_blank">AWS CodeBuild pricing</a></strong> and the <strong><a href="https://aws.amazon.com/free/" target="_blank">AWS Free Tier</a></strong>.</p>
+</div>
+<h1 id="exercise-using-aws-codebuild">Exercise: Using AWS CodeBuild</h1>
+<p>In this exercise, you will be updating the application with a buildspec file, and using CodeBuild to test the application. The buildspec file contains the same tests you performed with the local build: linting with pylint, and unit tests with pytest. You will also use CodeBuild to run unit tests against the application, and then view the log output.</p>
+<h2 id="task-1-creating-a-buildspec-file">Task 1: Creating a buildspec file</h2>
+<p>In this task, you create a <em>buildspec</em> file, which CodeBuild uses to run a build. You will then check these changes into your repository.</p>
+<ol type="1">
+<li><p>If needed, return to AWS Cloud9 and open your development environment.</p></li>
+<li><p>In the <strong>Environment</strong> pane, create a file by right-clicking the <strong>trivia-app</strong> folder and choosing <strong>New File</strong>.</p></li>
+<li><p>Rename the new file to <code>buildspecs/unittests.yaml</code>. In the <strong>Confirm move to a new folder</strong> window, choose <strong>Yes</strong>.</p></li>
+<li><p>Open the new file and in the new file, copy and paste the following code:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml" id="codeblock0"><code class="sourceCode yaml"><span id="cb1-1"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.2</span></span>
+<span id="cb1-2"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">phases</span><span class="kw">:</span></span>
+<span id="cb1-5"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">install</span><span class="kw">:</span></span>
+<span id="cb1-6"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">commands</span><span class="kw">:</span></span>
+<span id="cb1-7"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> pip3 install -U -r back-end-python/gameactions/requirements.txt</span></span>
+<span id="cb1-8"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> pip3 install -U -r back-end-python/tests/requirements.txt</span></span>
+<span id="cb1-9"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb1-11"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">commands</span><span class="kw">:</span></span>
+<span id="cb1-12"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> pylint --fail-under=8 back-end-python/gameactions/app.py</span></span>
+<span id="cb1-13"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> pytest back-end-python/tests/unit --junit-xml=unittests.xml --cov-report=xml --cov=gameactions --cov-branch</span></span>
+<span id="cb1-14"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">reports</span><span class="kw">:</span></span>
+<span id="cb1-16"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">UnitTests</span><span class="kw">:</span></span>
+<span id="cb1-17"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">files</span><span class="kw">:</span></span>
+<span id="cb1-18"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">'unittests.xml'</span></span>
+<span id="cb1-19"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">NewCoverage</span><span class="kw">:</span><span class="co"> #</span></span>
+<span id="cb1-20"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">files</span><span class="kw">:</span></span>
+<span id="cb1-21"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">'coverage.xml'</span></span>
+<span id="cb1-22"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">file-format</span><span class="kw">:</span><span class="at"> COBERTURAXML</span></span></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock0"><img class="clipboard" src="./Exercise 3_ AWS CodeBuild_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div></li>
+<li><p>Save the file.</p></li>
+<li><p>Add the file to your AWS CodeCommit repository.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash" id="codeblock1"><code class="sourceCode bash"><span id="cb2-1"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="pp">*</span></span>
+<span id="cb2-2"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"adding a unittests buildspec"</span></span>
+<span id="cb2-3"><a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/exercise-3.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main</span></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock1"><img class="clipboard" src="./Exercise 3_ AWS CodeBuild_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div></li>
+</ol>
+<h2 id="task-2-running-the-unit-tests-in-codebuild">Task 2: Running the unit tests in CodeBuild</h2>
+<p>In this task, you use CodeBuild to run tests and the console to view the log output.</p>
+<ol type="1">
+<li><p>At the top left, choose the <strong>AWS Cloud9</strong> icon and choose <strong>Go To Your Dashboard</strong>.</p></li>
+<li><p>Search for and choose <strong>CodeCommit</strong>.</p></li>
+<li><p>In the AWS CodeCommit navigation pane, choose <strong>Repositories</strong>.</p></li>
+<li><p>In the <strong>Repositories</strong> pane, open the <strong>trivia-app</strong> repository.</p></li>
+<li><p>View the commit that was pushed from <strong>AWS Cloud9</strong> by going to the navigation pane and choosing <strong>Commits</strong>.</p></li>
+<li><p>In the navigation pane, expand <strong>Build</strong> and then choose <strong>Build projects</strong>.</p></li>
+<li><p>Choose <strong>Create build project</strong> and configure the following settings.</p>
+<ul>
+<li><strong>Project name</strong>: <code>trivia-unittests</code></li>
+<li><strong>Repository</strong>: <code>trivia-app</code></li>
+<li><strong>Branch</strong>: <em>main</em></li>
+<li><strong>Operating system</strong>: <em>Ubuntu</em></li>
+<li><strong>Runtime(s)</strong>: <em>Standard</em></li>
+<li><strong>Image</strong>: <em>aws/codebuild/standard:5.0</em></li>
+<li><strong>Build specifications</strong>: Keep <em>Use a buildspec file</em> selected</li>
+<li><strong>Buildspec name - optional</strong>: <code>buildspecs/unittests.yaml</code></li>
+</ul></li>
+<li><p>Choose <strong>Create build project</strong>.</p></li>
+<li><p>Choose <strong>Start build</strong>.</p></li>
+<li><p>To see the build output, choose <strong>Tail logs</strong>.</p></li>
+<li><p>When the build shows as <em>Succeeded</em>, close the log window by choosing <strong>Close</strong> (at the bottom right of the window).</p></li>
+<li><p>Choose the <strong>Reports</strong> tab.</p></li>
+<li><p>View the <em>Pass rate</em> by selecting the <strong>Test</strong> report, or the <em>Line coverage</em> and <em>Branch coverage</em> by selecting the <strong>Code coverage</strong> report.</p></li>
+</ol>
+<script>
+document.body.innerHTML = document.body.innerHTML.replace(/https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C1/(.+)/g, function (match, capture) {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = capture;
+  return new URL(tmp.textContent || tmp.innerText || "", document.baseURI).href;
+});
+</script>
+
+<footer>
+    <p>© 2021 Amazon Web Services, Inc. or its affiliates. All rights reserved. This work may not be reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited. Corrections, feedback, or other questions? Contact us at <a href="https://support.aws.amazon.com/#/contacts/aws-training" target="_blank">https://support.aws.amazon.com/#/contacts/aws-training</a>. All trademarks are the property of their owners.</p>
+</footer>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

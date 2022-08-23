@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<!-- saved from url=(0091)https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C3/exercise-1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Exercise 1: Pipeline Changes</title>
+  <script src="./Exercise 1_ Pipeline Changes_files/clipboard.min.js"></script>
+  <script src="./Exercise 1_ Pipeline Changes_files/copybutton.js"></script>
+
+<style>
+    html, body, footer {
+        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        margin: 1em;
+    }
+
+    img:not(.clipboard){
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }
+
+    /* Copy buttons */
+    button.copybtn {
+        webkit-transition: opacity .3s ease-in-out;
+        -o-transition: opacity .3s ease-in-out;
+        transition: opacity .3s ease-in-out;
+        opacity: 0;
+        padding: 2px 6px;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+    }
+    div.sourceCode:hover .copybtn, div.sourceCode .copybtn:focus {
+        opacity: .3;
+    }
+    div.sourceCode .copybtn:hover {
+        opacity: 1;
+    }
+    div.sourceCode {
+        position: relative;
+    }
+    .xmodule_display.xmodule_HtmlBlock ol {
+        padding: 0 0 0 2em !important;
+    }
+    .xmodule_display.xmodule_HtmlBlock ul {
+        padding: 0 0 0 2em !important;
+    }
+
+    code {
+        padding: 2px 4px !important;
+        background-color: #eee !important;
+        border-radius: 4px;
+    }
+    pre code {
+        padding: 9.5px !important;
+        background-color: #f5f5f5 !important;
+        display: block;
+        overflow-x: auto;
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        word-break: break-all;
+        word-wrap: break-word;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        white-space: pre;
+    }
+    pre code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    pre code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    pre code span.at { color: #7d9029; } /* Attribute */
+    pre code span.bn { color: #40a070; } /* BaseN */
+    pre code span.bu { color: #06287e; } /* BuiltIn */
+    pre code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    pre code span.ch { color: #4070a0; } /* Char */
+    pre code span.cn { color: #880000; } /* Constant */
+    pre code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    pre code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    pre code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    pre code span.dt { color: #902000; } /* DataType */
+    pre code span.dv { color: #40a070; } /* DecVal */
+    pre code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    pre code span.ex { color: #06287e; } /* Extension */
+    pre code span.fl { color: #40a070; } /* Float */
+    pre code span.fu { color: #06287e; } /* Function */
+    pre code span.im { } /* Import */
+    pre code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    pre code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    pre code span.op { color: #666666; } /* Operator */
+    pre code span.ot { color: #007020; } /* Other */
+    pre code span.pp { color: #bc7a00; } /* Preprocessor */
+    pre code span.sc { color: #4070a0; } /* SpecialChar */
+    pre code span.ss { color: #bb6688; } /* SpecialString */
+    pre code span.st { color: #4070a0; } /* String */
+    pre code span.va { color: #19177c; } /* Variable */
+    pre code span.vs { color: #4070a0; } /* VerbatimString */
+    pre code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+    footer {
+        padding-top: 3em;
+        font-style: italic;
+        font-size: .9em;
+    }
+</style>
+</head><body data-new-gr-c-s-check-loaded="14.1075.0" data-gr-ext-installed="">
+<p><em>[version_1.0]</em></p>
+<div style="background-color: #FFD2D2; padding: 15px; margin-bottom: 25px">
+<h3>
+<span class="fa fa-info-circle"></span> Note
+</h3>
+<p>The exercises in this course will have an associated charge in your AWS account. In this exercise, you will create the following resources:</p>
+<ul>
+<li>AWS CloudFormation stack</li>
+<li>Amazon Simple Notification Service (Amazon SNS) topic</li>
+<li>Amazon EventBridge rule</li>
+<li>AWS CodePipeline pipeline</li>
+</ul>
+<p><strong>This exercise includes instructions to delete all the resources that you created for this exercise.</strong></p>
+<p>Familiarize yourself with <strong><a href="https://aws.amazon.com/cloudformation/pricing/" target="_blank">AWS CloudFormation pricing</a></strong>, <strong><a href="https://aws.amazon.com/sns/pricing/" target="_blank">Amazon SNS pricing</a></strong>, <strong><a href="https://aws.amazon.com/eventbridge/pricing/" target="_blank">Amazon EventBridge pricing</a></strong>, and <strong><a href="https://aws.amazon.com/codepipeline/pricing/" target="_blank">AWS CodePipeline pricing</a></strong>, and the <strong><a href="https://aws.amazon.com/free/" target="_blank">AWS Free Tier</a></strong>.</p>
+</div>
+<h1 id="exercise-monitoring-pipeline-changes">Exercise: Monitoring Pipeline Changes</h1>
+<p>In this exercise, you will monitor pipeline changes. You will create an SNS topic and an EventBridge rule. The rule will monitor the pipeline execution state change. If there are any state changes, it will notify you through email.</p>
+<h2 id="task-1-setting-up-with-aws-cloudformation">Task 1: Setting up with AWS CloudFormation</h2>
+<p>In this task, you use the same CloudFormation stack that you used in the previous course.</p>
+<ol type="1">
+<li><p>Download the following CloudFormation template: <a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C3/downloads/final_pipeline.yaml" target="_blank">final_pipeline.yaml</a></p></li>
+<li><p>In the AWS Management Console, choose <strong>Services</strong>, and search for and choose <strong>CloudFormation</strong>.</p></li>
+<li><p>In the CloudFormation navigation pane, choose <strong>Stacks</strong>.</p></li>
+<li><p>Choose <strong>Create stack</strong> and choose <strong>With new resources (standard)</strong>.</p></li>
+<li><p>In the <strong>Specify template</strong> page, select <strong>Upload a template file</strong> and select <strong>Choose file</strong>.</p></li>
+<li><p>Upload the <code>final_pipeline.yaml</code> file by opening the directory where you downloaded it, choosing the <code>final_pipeline.yaml</code> file, and choosing <strong>Open</strong>.</p></li>
+<li><p>Choose <strong>Next</strong>.</p></li>
+<li>In the <strong>Specify stack details</strong> page, enter the following values.
+<ul>
+<li><strong>Stack name</strong>: <code>final-pipeline</code></li>
+<li><strong>CodePipelineName</strong>: <code>final-pipeline</code></li>
+</ul></li>
+<li><p>Choose <strong>Next</strong>.</p></li>
+<li><p>Skip <strong>Configure stack options</strong> by choosing <strong>Next</strong>.</p></li>
+<li><p>At the bottom of the <strong>Review final-pipeline</strong> page, select <strong>I acknowledge that AWS CloudFormation might create IAM resources with custom names</strong> and choose <strong>Create stack</strong>.</p></li>
+</ol>
+<p><em>Creating the stack can take some time to complete. Allow the stack to finish before you continue to the next task</em>.</p>
+<h2 id="task-2-creating-an-sns-topic">Task 2: Creating an SNS topic</h2>
+<p>In this task, you set up an SNS topic that will later be used as the target for your EventBridge rule.</p>
+<ol type="1">
+<li><p>Choose <strong>Services</strong>, search for and open <strong>Amazon SNS</strong>.</p></li>
+<li><p>In the navigation pane, choose <strong>Topics</strong> and then choose <strong>Create topic</strong>.</p></li>
+<li>In the <strong>Details</strong> section, configure the following options:
+<ul>
+<li><strong>Type</strong>: <em>Standard</em></li>
+<li><strong>Name</strong>: <code>pipeline-topic</code></li>
+</ul></li>
+<li><p>Keep all other settings at their defaults and choose <strong>Create topic</strong>.</p></li>
+<li><p>In the <strong>Subscriptions</strong> tab, choose <strong>Create subscription</strong>.</p></li>
+<li>In the <strong>Details</strong> section, configure the following settings:
+<ul>
+<li><strong>Protocol</strong>: <em>Email</em></li>
+<li><strong>Endpoint</strong>: Enter your email address</li>
+</ul></li>
+<li><p>Choose <strong>Create subscription</strong>.</p></li>
+</ol>
+<p>You will receive an email message for subscription confirmation.</p>
+<ol type="1">
+<li>Confirm the subscription.</li>
+</ol>
+<h2 id="task-3-creating-an-eventbridge-rule">Task 3: Creating an EventBridge rule</h2>
+<p>In this task, you create the EventBridge rule that will be used to key on any CodePipeline changes. This rule will filter out those events, and then use the SNS topic that you created to send you an email message.</p>
+<ol type="1">
+<li><p>Search for and open <strong>EventBridge</strong>.</p></li>
+<li><p>Under <strong>Events</strong>, choose <strong>Rules</strong> and then choose <strong>Create rule</strong>.</p></li>
+<li>In the <strong>Create rule</strong> page, configure the following settings.
+<ul>
+<li><strong>Name</strong>: <code>pipeline-rule</code></li>
+<li><strong>Define pattern</strong>: <em>Event pattern</em></li>
+<li><strong>Event matching pattern</strong>: <em>Pre-defined pattern by service</em></li>
+<li><strong>Service provider</strong>: <em>AWS</em></li>
+<li><strong>Service name</strong>: <em>CodePipeline</em></li>
+<li><strong>EventType</strong>: <em>CodePipeline Pipeline Execution State Change</em></li>
+<li><strong>Target</strong>: <em>SNS topic</em></li>
+<li><strong>Topic</strong>: <em>pipeline-topic</em></li>
+</ul></li>
+<li><p>Choose <strong>Create</strong>.</p></li>
+</ol>
+<h2 id="task-4-running-aws-codepipeline">Task 4: Running AWS CodePipeline</h2>
+<p>In this task, you start a pipeline execution manually. CodePipeline will then run most recent version of the source through all stages and actions that are defined in the pipeline.</p>
+<ol type="1">
+<li><p>Search for and open <strong>CodePipeline</strong>.</p></li>
+<li><p>From the <strong>Pipelines</strong> list, choose the <code>final-pipeline</code> link.</p></li>
+<li><p>In the <strong>final-pipeline</strong> page, choose <strong>Release change</strong> and then choose <strong>Release</strong>.</p></li>
+</ol>
+<p>You will get an email notification about the pipeline’s state change.</p>
+<ol type="1">
+<li><p>In the email message, you should see a state change that’s similar to the following example:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode json" id="codeblock0"><code class="sourceCode json"><a class="sourceLine" id="cb1-1" title="1"><span class="er">"state":"STARTED","version":1.0}}</span></a></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock0"><img class="clipboard" src="./Exercise 1_ Pipeline Changes_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div>
+<p>And</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode json" id="codeblock1"><code class="sourceCode json"><a class="sourceLine" id="cb2-1" title="1"><span class="er">"state":"SUCCEEDED","version":1.0}}</span></a></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock1"><img class="clipboard" src="./Exercise 1_ Pipeline Changes_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div></li>
+</ol>
+<h2 id="cleaning-up">Cleaning up</h2>
+<p>In this task, you delete the AWS resources that you created for this exercise.</p>
+<ol type="1">
+<li>Open the <strong>Amazon S3</strong> console.
+<ul>
+<li>Empty and delete the bucket with the name: <strong>final-pipeline-codepipelineartifactstores3bucket-&lt;random_string&gt;</strong>.</li>
+</ul></li>
+<li>Open the <strong>AWS CloudFormation console</strong>.
+<ul>
+<li>Delete the <strong>final-pipeline</strong> stack.</li>
+</ul></li>
+<li>Open the <strong>EventBridge</strong> console and in the navigation pane, choose <strong>Rules</strong>.
+<ul>
+<li>Delete <strong>pipeline-rule</strong>.</li>
+</ul></li>
+<li>Open the <strong>Amazon SNS</strong> console.
+<ul>
+<li>In the navigation pane, choose <strong>Topics</strong> and delete <strong>pipeline-topic</strong>.</li>
+<li>In the navigation pane, choose <strong>Subscriptions</strong> and delete your <em>pipeline-topic</em> subscription.</li>
+</ul></li>
+</ol>
+<script>
+document.body.innerHTML = document.body.innerHTML.replace(/https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C3/(.+)/g, function (match, capture) {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = capture;
+  return new URL(tmp.textContent || tmp.innerText || "", document.baseURI).href;
+});
+</script>
+
+<footer>
+    <p>© 2021 Amazon Web Services, Inc. or its affiliates. All rights reserved. This work may not be reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited. Corrections, feedback, or other questions? Contact us at <a href="https://support.aws.amazon.com/#/contacts/aws-training" target="_blank">https://support.aws.amazon.com/#/contacts/aws-training</a>. All trademarks are the property of their owners.</p>
+</footer>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

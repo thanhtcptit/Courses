@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!-- saved from url=(0091)https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C3/exercise-2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Exercise 2: Logging</title>
+  <script src="./Exercise 2_ Logging_files/clipboard.min.js"></script>
+  <script src="./Exercise 2_ Logging_files/copybutton.js"></script>
+
+<style>
+    html, body, footer {
+        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        margin: 1em;
+    }
+
+    img:not(.clipboard){
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }
+
+    /* Copy buttons */
+    button.copybtn {
+        webkit-transition: opacity .3s ease-in-out;
+        -o-transition: opacity .3s ease-in-out;
+        transition: opacity .3s ease-in-out;
+        opacity: 0;
+        padding: 2px 6px;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+    }
+    div.sourceCode:hover .copybtn, div.sourceCode .copybtn:focus {
+        opacity: .3;
+    }
+    div.sourceCode .copybtn:hover {
+        opacity: 1;
+    }
+    div.sourceCode {
+        position: relative;
+    }
+    .xmodule_display.xmodule_HtmlBlock ol {
+        padding: 0 0 0 2em !important;
+    }
+    .xmodule_display.xmodule_HtmlBlock ul {
+        padding: 0 0 0 2em !important;
+    }
+
+    code {
+        padding: 2px 4px !important;
+        background-color: #eee !important;
+        border-radius: 4px;
+    }
+    pre code {
+        padding: 9.5px !important;
+        background-color: #f5f5f5 !important;
+        display: block;
+        overflow-x: auto;
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        word-break: break-all;
+        word-wrap: break-word;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        white-space: pre;
+    }
+    pre code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    pre code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    pre code span.at { color: #7d9029; } /* Attribute */
+    pre code span.bn { color: #40a070; } /* BaseN */
+    pre code span.bu { color: #06287e; } /* BuiltIn */
+    pre code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    pre code span.ch { color: #4070a0; } /* Char */
+    pre code span.cn { color: #880000; } /* Constant */
+    pre code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    pre code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    pre code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    pre code span.dt { color: #902000; } /* DataType */
+    pre code span.dv { color: #40a070; } /* DecVal */
+    pre code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    pre code span.ex { color: #06287e; } /* Extension */
+    pre code span.fl { color: #40a070; } /* Float */
+    pre code span.fu { color: #06287e; } /* Function */
+    pre code span.im { } /* Import */
+    pre code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    pre code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    pre code span.op { color: #666666; } /* Operator */
+    pre code span.ot { color: #007020; } /* Other */
+    pre code span.pp { color: #bc7a00; } /* Preprocessor */
+    pre code span.sc { color: #4070a0; } /* SpecialChar */
+    pre code span.ss { color: #bb6688; } /* SpecialString */
+    pre code span.st { color: #4070a0; } /* String */
+    pre code span.va { color: #19177c; } /* Variable */
+    pre code span.vs { color: #4070a0; } /* VerbatimString */
+    pre code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+    footer {
+        padding-top: 3em;
+        font-style: italic;
+        font-size: .9em;
+    }
+</style>
+</head><body data-new-gr-c-s-check-loaded="14.1075.0" data-gr-ext-installed="">
+<p><em>[version_1.0]</em></p>
+<div style="background-color: #FFD2D2; padding: 15px; margin-bottom: 25px">
+<h3>
+<span class="fa fa-info-circle"></span> Note
+</h3>
+<p>The exercises in this course will have an associated charge in your AWS account. In this exercise, you will create the following resources:</p>
+<ul>
+<li>Amazon Simple Storage Service (Amazon S3) bucket</li>
+<li>AWS CodeDeploy application and deployment group</li>
+<li>AWS CodeCommit repository</li>
+<li>AWS Identity and Access Management (IAM) roles</li>
+<li>Amazon Elastic Compute Cloud (Amazon EC2) instance</li>
+<li>AWS CodePipeline pipeline</li>
+</ul>
+<p><strong>This exercise includes instructions to delete all the resources that you created for this exercise.</strong></p>
+<p>Familiarize yourself with <strong><a href="https://aws.amazon.com/s3/pricing/" target="_blank">Amazon S3 pricing</a></strong>, <strong><a href="https://aws.amazon.com/codedeploy/pricing/" target="_blank">AWS CodeDeploy pricing</a></strong>, <strong><a href="https://aws.amazon.com/codecommit/pricing/" target="_blank">AWS CodeCommit pricing</a></strong>, and <strong><a href="https://aws.amazon.com/codepipeline/pricing/" target="_blank">AWS CodePipeline pricing</a></strong>, and <strong><a href="https://aws.amazon.com/ec2/pricing/" target="_blank">Amazon EC2 pricing</a></strong>, and the <strong><a href="https://aws.amazon.com/free/" target="_blank">AWS Free Tier</a></strong>.</p>
+</div>
+<h1 id="exercise-logging">Exercise: Logging</h1>
+<p>In this exercise, you will use AWS Systems Manager to run commands. These commands will use the grep utility to search Apache logs on the underlying instance. You will then output these logs to Amazon CloudWatch.</p>
+<h2 id="task-1-setting-up-with-aws-cloudformation">Task 1: Setting up with AWS CloudFormation</h2>
+<p>In this task, you use the same CloudFormation stack that you used in the previous exercise.</p>
+<ol type="1">
+<li><p>Download the following CloudFormation template: <a href="https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C3/downloads/final_pipeline.yaml" target="_blank">final_pipeline.yaml</a></p></li>
+<li><p>In the AWS Management Console, choose <strong>Services</strong>, and search for and choose <strong>CloudFormation</strong>.</p></li>
+<li><p>In the CloudFormation navigation pane, choose <strong>Stacks</strong>.</p></li>
+<li><p>Choose <strong>Create stack</strong> and choose <strong>With new resources (standard)</strong>.</p></li>
+<li><p>In the <strong>Specify template</strong> page, select <strong>Upload a template file</strong> and select <strong>Choose file</strong>.</p></li>
+<li><p>Upload the <code>final_pipeline.yaml</code> file by opening the directory where you downloaded it, choosing the <code>final_pipeline.yaml</code> file, and choosing <strong>Open</strong>.</p></li>
+<li><p>Choose <strong>Next</strong>.</p></li>
+<li>In the <strong>Specify stack details</strong> page, enter the following values.
+<ul>
+<li><strong>Stack name</strong>: <code>final-pipeline</code></li>
+<li><strong>CodePipelineName</strong>: <code>final-pipeline</code></li>
+</ul></li>
+<li><p>Choose <strong>Next</strong>.</p></li>
+<li><p>Skip <strong>Configure stack options</strong> by choosing <strong>Next</strong>.</p></li>
+<li><p>At the bottom of the <strong>Review final-pipeline</strong> page, select <strong>I acknowledge that AWS CloudFormation might create IAM resources with custom names</strong> and choose <strong>Create stack</strong>.</p></li>
+</ol>
+<p><em>Creating the stack can take some time to complete. Allow the stack to finish before you continue to the next task</em>.</p>
+<h2 id="task-2-searching-for-information-in-log-files">Task 2: Searching for information in log files</h2>
+<p>In this task, you use grep to search the Apache logs on the underlying EC2 instance. To do so, you use AWS Systems Manager to run some shell commands.</p>
+<ol type="1">
+<li><p>Choose <strong>Services</strong>, and search for and open <strong>SSM</strong>.</p></li>
+<li><p>In the navigation pane, under <strong>Node Management</strong>, choose <strong>Run Command</strong>.</p></li>
+<li><p>Choose <strong>Run a Command</strong>.</p></li>
+<li><p>In the <strong>Command document</strong> search box, enter <code>script</code> and press Enter. <em>Wait for the command document options to load</em>.</p></li>
+<li><p>Select <strong>AWS-RunShellScript</strong>.</p>
+<p>You are looking for any 404 errors that occurred and are logged in the Apache log file.</p></li>
+<li><p>In the <strong>Command parameters</strong> box, paste the following command:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash" id="codeblock0"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" title="1"><span class="fu">cat</span> /etc/httpd/logs/access_log <span class="kw">|</span> <span class="fu">grep</span> 404</a></code></pre><button class="btn copybtn" data-clipboard-target="#codeblock0"><img class="clipboard" src="./Exercise 2_ Logging_files/clipboard.svg" width="13" alt="Copy to clipboard"></button></div></li>
+<li>In the <strong>Targets</strong> section, add a tag by keeping <strong>Specify instance tags</strong> selected, entering the following values, and then choosing <strong>Add</strong>:
+<ul>
+<li><strong>Tag key</strong>: <code>Name</code></li>
+<li><strong>Tag value</strong>: <code>CodePipelineBlog</code></li>
+</ul></li>
+<li>Under <strong>Output options</strong>, configure the following settings.
+<ul>
+<li><strong>Enable an S3 bucket</strong>: Clear this check box</li>
+<li><strong>Enable CloudWatch logs</strong>: Select this check box</li>
+<li><strong>Log group name</strong>: <code>/runcommand/404-check</code></li>
+</ul></li>
+<li><p>Choose <strong>Run</strong>.</p></li>
+</ol>
+<p>In the <strong>Targets and outputs</strong> section, the status should eventually show as <em>Success</em>.</p>
+<ol type="1">
+<li>To see the log, you can drill down by choosing the instance under <strong>Instance ID</strong> and then expanding <strong>Output</strong>.</li>
+</ol>
+<h2 id="task-3-viewing-the-apache-logs-with-amazon-cloudwatch-logs">Task 3: Viewing the Apache logs with Amazon CloudWatch Logs</h2>
+<p>In this task, you also view the Apache logs by using Amazon CloudWatch Logs.</p>
+<ol type="1">
+<li><p>Open the <strong>CloudWatch</strong> console.</p></li>
+<li><p>In the navigation pane, under <strong>Logs</strong>, choose <strong>Log groups</strong>.</p>
+<p>In the <strong>Log group</strong> list, you should see <em>/runcommand/404-check</em>.</p></li>
+<li><p>Choose the <strong>/runcommand/404-check</strong> link.</p></li>
+<li><p>Choose the <strong>Log stream</strong>.</p>
+<p>You should see the 404 error log that was also in the output from the previous task.</p></li>
+</ol>
+<h2 id="cleaning-up">Cleaning up</h2>
+<p>In this task, you delete the AWS resources that you created for this project.</p>
+<ol type="1">
+<li>Open the <strong>Amazon S3</strong> console.
+<ul>
+<li>Empty and delete the bucket with the name: <strong>final-pipeline-codepipelineartifactstores3bucket-&lt;random_string&gt;</strong>.</li>
+</ul></li>
+<li>Open the <strong>AWS CloudFormation console</strong>.
+<ul>
+<li>Delete the <strong>final-pipeline</strong> stack.</li>
+</ul></li>
+<li>Open the <strong>CloudWatch</strong> console and in the navigation pane under <strong>Logs</strong>, choose <strong>Log groups</strong>.
+<ul>
+<li>Delete the <strong>/runcommand/404-check</strong> group.</li>
+</ul></li>
+</ol>
+<script>
+document.body.innerHTML = document.body.innerHTML.replace(/https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/DEV-AWS-MO-DevOps-C3/(.+)/g, function (match, capture) {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = capture;
+  return new URL(tmp.textContent || tmp.innerText || "", document.baseURI).href;
+});
+</script>
+
+<footer>
+    <p>© 2021 Amazon Web Services, Inc. or its affiliates. All rights reserved. This work may not be reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited. Corrections, feedback, or other questions? Contact us at <a href="https://support.aws.amazon.com/#/contacts/aws-training" target="_blank">https://support.aws.amazon.com/#/contacts/aws-training</a>. All trademarks are the property of their owners.</p>
+</footer>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
