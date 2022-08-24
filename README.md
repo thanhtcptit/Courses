@@ -1,6 +1,6 @@
 # Coursera Certificates
 
-Resources of all Coursera's courses that I have finished
+Resources of all Coursera's specializations & courses that I have finished
 
 ## Course List
 - [x] [DevOps on AWS Specialization - Amazon Web Services](https://www.coursera.org/specializations/aws-devops)
