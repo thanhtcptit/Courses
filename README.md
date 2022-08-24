@@ -1,4 +1,4 @@
-# Coursera Plus Solutions
+# Coursera Certificates
 
 Resources of all Coursera's courses that I have finished
 
