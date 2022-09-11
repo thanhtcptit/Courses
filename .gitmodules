@@ -1,0 +1,15 @@
+[submodule "Building-Cloud-Computing-Solutions-at-Scale-Specialization"]
+	path = Building-Cloud-Computing-Solutions-at-Scale-Specialization
+	url = https://github.com/thanhtcptit/Building-Cloud-Computing-Solutions-at-Scale-Specialization
+[submodule "DevOps-on-AWS-Specialization"]
+	path = DevOps-on-AWS-Specialization
+	url = https://github.com/thanhtcptit/DevOps-on-AWS-Specialization
+[submodule "Mathematics-for-ML-Specialization"]
+	path = Mathematics-for-ML-Specialization
+	url = https://github.com/thanhtcptit/Mathematics-for-ML-Specialization
+[submodule "Natural-Language-Processing-Specialization"]
+	path = Natural-Language-Processing-Specialization
+	url = https://github.com/thanhtcptit/Natural-Language-Processing-Specialization
+[submodule "Statistics-with-Python-Specialization"]
+	path = Statistics-with-Python-Specialization
+	url = https://github.com/thanhtcptit/Statistics-with-Python-Specialization
