@@ -16,3 +16,6 @@
 [submodule "Recommender-System-Specialization"]
 	path = Recommender-System-Specialization
 	url = https://github.com/thanhtcptit/Recommender-System-Specialization
+[submodule "Practical-Time-Series-Analysis"]
+	path = Practical-Time-Series-Analysis
+	url = https://github.com/thanhtcptit/Practical-Time-Series-Analysis
