@@ -13,3 +13,6 @@
 [submodule "Statistics-with-Python-Specialization"]
 	path = Statistics-with-Python-Specialization
 	url = https://github.com/thanhtcptit/Statistics-with-Python-Specialization
+[submodule "Recommender-System-Specialization"]
+	path = Recommender-System-Specialization
+	url = https://github.com/thanhtcptit/Recommender-System-Specialization
