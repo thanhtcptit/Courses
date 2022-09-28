@@ -8,6 +8,7 @@ Resources of Coursera specializations & courses I have finished
 - [x] [DevOps on AWS Specialization - Amazon Web Services](https://www.coursera.org/specializations/aws-devops)
 - [x] [Mathematics for Machine Learning Specialization - Imperial College London](https://www.coursera.org/specializations/mathematics-machine-learning)
 - [x] [Natural Language Processing Specialization - DeepLearning.ai](https://www.coursera.org/specializations/natural-language-processing)
+- [x] [Parallel, Concurrent, and Distributed Programming in Java Specialization - Rice University](https://www.coursera.org/specializations/pcdp)
 - [x] [Practical Time Series Analysis - The State University of New York](https://www.coursera.org/learn/practical-time-series-analysis)
 - [x] [Recommender Systems Specialization - University of Minnesota](https://www.coursera.org/specializations/recommender-systems)
 - [x] [Statistics with Python Specialization - University of Michigan](https://www.coursera.org/specializations/statistics-with-python)

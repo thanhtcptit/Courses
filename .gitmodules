@@ -19,3 +19,6 @@
 [submodule "Practical-Time-Series-Analysis"]
 	path = Practical-Time-Series-Analysis
 	url = https://github.com/thanhtcptit/Practical-Time-Series-Analysis
+[submodule "Parallel-Concurrent-and-Distributed-Programming-in-Java-Specialization"]
+	path = Parallel-Concurrent-and-Distributed-Programming-in-Java-Specialization
+	url = https://github.com/thanhtcptit/Parallel-Concurrent-and-Distributed-Programming-in-Java-Specialization
