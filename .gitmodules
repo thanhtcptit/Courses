@@ -22,3 +22,18 @@
 [submodule "Parallel-Concurrent-and-Distributed-Programming-in-Java-Specialization"]
 	path = Parallel-Concurrent-and-Distributed-Programming-in-Java-Specialization
 	url = https://github.com/thanhtcptit/Parallel-Concurrent-and-Distributed-Programming-in-Java-Specialization
+[submodule "I211E-Mathematical-Logic"]
+	path = I211E-Mathematical-Logic
+	url = https://github.com/thanhtcptit/I211E-Mathematical-Logic
+[submodule "I232E-Information-Theory"]
+	path = I232E-Information-Theory
+	url = https://github.com/thanhtcptit/I232E-Information-Theory
+[submodule "I214E-System-Optimization"]
+	path = I214E-System-Optimization
+	url = https://github.com/thanhtcptit/I214E-System-Optimization
+[submodule "I213E-Discrete-Signal-Processing"]
+	path = I213E-Discrete-Signal-Processing
+	url = https://github.com/thanhtcptit/I213E-Discrete-Signal-Processing
+[submodule "I217E-Functional-Programming"]
+	path = I217E-Functional-Programming
+	url = https://github.com/thanhtcptit/I217E-Functional-Programming
