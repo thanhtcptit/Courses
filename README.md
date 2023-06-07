@@ -16,3 +16,4 @@
 - System Optimization - JAIST
 - Discrete Signal Processing - JAIST
 - Functional Programming - JAIST
+- Computer Network - JAIST

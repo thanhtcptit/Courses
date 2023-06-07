@@ -37,3 +37,6 @@
 [submodule "I217E-Functional-Programming"]
 	path = I217E-Functional-Programming
 	url = https://github.com/thanhtcptit/I217E-Functional-Programming
+[submodule "I226E-Computer-Networks"]
+	path = I226E-Computer-Networks
+	url = https://github.com/thanhtcptit/I226E-Computer-Networks
