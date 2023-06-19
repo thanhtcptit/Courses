@@ -11,9 +11,9 @@
 - [Practical Time Series Analysis - The State University of New York](https://www.coursera.org/learn/practical-time-series-analysis)
 - [Recommender Systems Specialization - University of Minnesota](https://www.coursera.org/specializations/recommender-systems)
 - [Statistics with Python Specialization - University of Michigan](https://www.coursera.org/specializations/statistics-with-python)
-- Mathematical Logic - JAIST
-- Information Theory - JAIST
-- System Optimization - JAIST
-- Discrete Signal Processing - JAIST
-- Functional Programming - JAIST
-- Computer Network - JAIST
+- [Mathematical Logic - JAIST](https://dlc-lms.jaist.ac.jp/moodle/course/view.php?id=2722)
+- [Information Theory - JAIST](https://dlc-lms.jaist.ac.jp/moodle/course/view.php?id=2714)
+- [System Optimization - JAIST](https://dlc-lms.jaist.ac.jp/moodle/course/view.php?id=2628)
+- [Discrete Signal Processing - JAIST](https://dlc-lms.jaist.ac.jp/moodle/course/view.php?id=2630)
+- [Functional Programming - JAIST](https://dlc-lms.jaist.ac.jp/moodle/course/view.php?id=2591)
+- [Computer Network - JAIST](https://dlc-lms.jaist.ac.jp/moodle/course/view.php?id=2577)

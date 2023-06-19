@@ -40,3 +40,6 @@
 [submodule "I226E-Computer-Networks"]
 	path = I226E-Computer-Networks
 	url = https://github.com/thanhtcptit/I226E-Computer-Networks
+[submodule "Bayesian-Statistics-Specialization"]
+	path = Bayesian-Statistics-Specialization
+	url = https://github.com/thanhtcptit/Bayesian-Statistics-Specialization.git
