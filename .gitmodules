@@ -43,3 +43,6 @@
 [submodule "Bayesian-Statistics-Specialization"]
 	path = Bayesian-Statistics-Specialization
 	url = https://github.com/thanhtcptit/Bayesian-Statistics-Specialization.git
+[submodule "Digital-Signal-Processing-Specialization"]
+	path = Digital-Signal-Processing-Specialization
+	url = https://github.com/thanhtcptit/Digital-Signal-Processing-Specialization
